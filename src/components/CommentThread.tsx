@@ -15,7 +15,7 @@ function ReplyExpansion({ visible, reduced, children }: { visible: boolean; redu
       opacity: withTiming(visible ? 1 : 0, config),
     };
   });
-  return <Animated.View style={[{ overflow: 'hidden' }, animatedStyle]} pointerEvents={visible ? 'auto' : 'none'} accessibilityElementsHidden={!visible} importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}>
+  return <Animated.View style={[{ overflow: 'hidden' }, animatedStyle]} pointerEvents={visible ? 'auto' : 'none'} aria-hidden={!visible} accessibilityElementsHidden={!visible} importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}>
     <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }} onLayout={event => { contentHeight.value = event.nativeEvent.layout.height; }}>
       {children}
     </View>
@@ -28,9 +28,9 @@ function CommentBody({ comment, small = false }: { comment: Comment; small?: boo
   const own = comment.authorId === data?.currentUser.id;
   const arabic = /\p{Script=Arabic}/u.test(comment.body);
   return <View style={{ flexDirection: rtl ? 'row-reverse' : 'row', gap: 10 }}>
-    <View accessible={false} style={[styles.avatar, small && { width: 32, height: 32, borderRadius: 16 }]}><Label style={[styles.initials, small && { fontSize: 12 }]}>{author.initials}</Label></View>
+    <View accessible={false} aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={[styles.avatar, small && { width: 32, height: 32, borderRadius: 16 }]}><Label style={[styles.initials, small && { fontSize: 12 }]}>{author.initials}</Label></View>
     <View style={{ flex: 1, gap: 4 }}>
-      <View style={{ flexDirection: rtl ? 'row-reverse' : 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
+      <View accessible accessibilityRole="text" accessibilityLabel={`${small ? t.replyBy : t.commentBy} ${author.name}${own ? `, ${t.you}` : ''}`} accessibilityLanguage={locale} style={{ flexDirection: rtl ? 'row-reverse' : 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
         <Label style={{ fontWeight: '600', fontSize: 14, writingDirection: 'auto' }}>{author.name}</Label>
         {own && <Label style={styles.badge}>{t.you}</Label>}
       </View>
@@ -40,16 +40,17 @@ function CommentBody({ comment, small = false }: { comment: Comment; small?: boo
   </View>;
 }
 export const CommentThread = memo(function CommentThread({ comment, comments, onReply, submitting }: { comment: Comment; comments: Comment[]; onReply: (id: string) => void; submitting: boolean }) {
-  const { t, rtl } = useDiscussion();
+  const { data, t, rtl } = useDiscussion();
   const reduced = useReducedMotion();
   const children = replies(comments, comment.id);
+  const authorName = data?.users.find(user => user.id === comment.authorId)?.name ?? t.unknownAuthor;
   const [hiddenCount, setHiddenCount] = useState<number | null>(null);
   const visible = hiddenCount !== children.length;
   return <View style={styles.thread}>
     <CommentBody comment={comment} />
     <View style={{ flexDirection: rtl ? 'row-reverse' : 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-      <Button ghost icon="reply" mirrorIcon={rtl} disabled={submitting} onPress={() => { setHiddenCount(null); onReply(comment.id); }}>{t.reply}</Button>
-      {!!children.length && <Button ghost icon={visible ? 'chevronUp' : 'chevronDown'} expanded={visible} onPress={() => { setHiddenCount(visible ? children.length : null); }}>{visible ? t.hideReplies : t.showReplies} ({children.length})</Button>}
+      <Button ghost icon="reply" mirrorIcon={rtl} accessibilityLabel={`${t.reply} — ${authorName}`} disabled={submitting} onPress={() => { setHiddenCount(null); onReply(comment.id); }}>{t.reply}</Button>
+      {!!children.length && <Button ghost icon={visible ? 'chevronUp' : 'chevronDown'} accessibilityLabel={`${visible ? t.hideReplies : t.showReplies} (${children.length}) — ${authorName}`} expanded={visible} onPress={() => { setHiddenCount(visible ? children.length : null); }}>{visible ? t.hideReplies : t.showReplies} ({children.length})</Button>}
     </View>
     {children.length > 0 && <ReplyExpansion visible={visible} reduced={reduced}><View style={{ gap: 12, paddingTop: 14, paddingStart: 12, direction: rtl ? 'rtl' : 'ltr' }}>
       {children.map(reply => <View key={reply.id} style={styles.reply}><CommentBody comment={reply} small /></View>)}

@@ -6,15 +6,16 @@ import { Icon, type IconName } from './Icon';
 export const colors = { brand: '#1c2933', canvas: '#f7f9f9', border: '#e2e8f0', muted: '#64748b', ink: '#0f172a', body: '#334155', avatar: '#FFF5D6', green: '#065f46', badge: '#ecfdf5' };
 export const latinFont = Platform.OS === 'ios' || Platform.OS === 'web' ? 'Arial' : 'sans-serif';
 export function Label({ style, ...props }: TextProps) {
-  const { rtl } = useDiscussion();
+  const { rtl, locale } = useDiscussion();
   const arabic = /\p{Script=Arabic}/u.test(String(props.children ?? ''));
-  return <Text {...props} style={[s.text, { fontFamily: arabic ? 'Cairo' : latinFont, textAlign: rtl ? 'right' : 'left', writingDirection: rtl ? 'rtl' : 'ltr' }, style]} />;
+  const textLanguage = arabic ? 'ar' : /[a-z]/i.test(String(props.children ?? '')) ? 'en' : locale;
+  return <Text {...props} accessibilityLanguage={props.accessibilityLanguage ?? textLanguage} style={[s.text, { fontFamily: arabic ? 'Cairo' : latinFont, textAlign: rtl ? 'right' : 'left', writingDirection: rtl ? 'rtl' : 'ltr' }, style]} />;
 }
 export function Button({ children, onPress, disabled, subtle = false, ghost = false, accessibilityLabel, expanded, icon, iconAfter = false, mirrorIcon = false, language = false, loading = false }: { children: ReactNode; onPress: () => void; disabled?: boolean; subtle?: boolean; ghost?: boolean; accessibilityLabel?: string; expanded?: boolean; icon?: IconName; iconAfter?: boolean; mirrorIcon?: boolean; language?: boolean; loading?: boolean }) {
-  const { rtl } = useDiscussion();
+  const { rtl, locale } = useDiscussion();
   const foreground = ghost ? '#475569' : subtle ? '#334155' : '#fff';
   const graphic = icon ? <Icon name={icon} color={foreground} mirrored={mirrorIcon} /> : null;
-  return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} accessibilityState={{ disabled: !!disabled || loading, busy: loading, expanded }} disabled={disabled || loading} onPress={onPress} style={({ pressed }) => [s.button, { flexDirection: rtl ? 'row-reverse' : 'row' }, subtle && s.subtle, ghost && s.ghost, (disabled || loading || pressed) && { opacity: 0.55 }]}>
+  return <Pressable accessibilityRole="button" accessibilityLanguage={locale} accessibilityLabel={accessibilityLabel} accessibilityState={{ disabled: !!disabled || loading, busy: loading, expanded }} disabled={disabled || loading} onPress={onPress} style={({ pressed }) => [s.button, { flexDirection: rtl ? 'row-reverse' : 'row' }, subtle && s.subtle, ghost && s.ghost, (disabled || pressed) && { opacity: 0.55 }]}>
     {loading && <ActivityIndicator accessible={false} size="small" color={foreground} />}
     {!iconAfter && graphic}
     {language && <Text accessible={false} style={{ color: foreground, fontFamily: latinFont, fontSize: 16 }}>文A</Text>}
@@ -42,8 +43,8 @@ export const s = StyleSheet.create({
   button: { minHeight: 48, gap: 8, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 8, backgroundColor: colors.brand, justifyContent: 'center', alignItems: 'center' },
   subtle: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.border },
   ghost: { backgroundColor: 'transparent', paddingHorizontal: 8 },
-  buttonText: { color: '#fff', textAlign: 'center', fontWeight: '600', fontSize: 14 },
-  input: { minHeight: 115, maxHeight: 220, borderWidth: 1, borderColor: '#cbd5e1', borderRadius: 10, padding: 14, fontFamily: 'Cairo', fontSize: 15, lineHeight: 25, color: colors.ink, backgroundColor: '#fff' },
+  buttonText: { color: '#fff', textAlign: 'center', fontWeight: '600', fontSize: 14, flexShrink: 1 },
+  input: { minHeight: 115, maxHeight: 220, borderWidth: 1, borderColor: colors.muted, borderRadius: 10, padding: 14, fontFamily: 'Cairo', fontSize: 15, lineHeight: 25, color: colors.ink, backgroundColor: '#fff' },
   bone: { backgroundColor: '#e2e8ea', borderRadius: 6 },
   error: { color: '#b91c1c', fontSize: 14 },
 });

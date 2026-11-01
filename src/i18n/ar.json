@@ -40,5 +40,10 @@
   "unknownAuthor": "كاتب غير معروف",
   "submitting": "جار النشر…",
   "skipToContent": "انتقل إلى المحتوى",
-  "invalidReplyError": "لا يمكن الرد على هذا التعليق. اختر تعليقا رئيسيا متاحا."
+  "invalidReplyError": "لا يمكن الرد على هذا التعليق. اختر تعليقا رئيسيا متاحا.",
+  "characterLimit": "الحد الأقصى 2000 حرف.",
+  "cancelReply": "إلغاء الرد",
+  "switchLanguage": "التبديل إلى الإنجليزية",
+  "commentBy": "تعليق من",
+  "replyBy": "رد من"
 }

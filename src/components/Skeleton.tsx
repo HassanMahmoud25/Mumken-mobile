@@ -77,8 +77,8 @@ export function Skeleton({ detail = false }: { detail?: boolean }) {
     animation.start();
     return () => animation.stop();
   }, [opacity, reduced]);
-  return <View accessible accessibilityLabel={t.loading} accessibilityState={{ busy: true }}>
-    <Animated.View style={{ opacity }} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden pointerEvents="none">
+  return <View accessible accessibilityRole="progressbar" accessibilityLabel={t.loading} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite">
+    <Animated.View style={{ opacity }} aria-hidden importantForAccessibility="no-hide-descendants" accessibilityElementsHidden pointerEvents="none">
       {detail ? <><RecordPlaceholder detail /><DiscussionPlaceholder /></> : [0, 1, 2].map(index => <RecordPlaceholder key={index} detail={false} />)}
     </Animated.View>
   </View>;

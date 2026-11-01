@@ -18,7 +18,7 @@ export function DemoControls() {
   ];
   return <><Button subtle onPress={() => setOpen(true)} accessibilityLabel={ar ? 'سيناريوهات التطوير' : 'Development scenarios'}>{ar ? 'تجربة' : 'Demo'}</Button>
     <Modal visible={open} animationType="none" onRequestClose={() => setOpen(false)}><SafeAreaView style={{ flex: 1 }}><ScrollView contentContainerStyle={{ padding: 24, gap: 14 }}>
-      <Label style={s.heading}>{ar ? 'سيناريوهات التطوير' : 'Development scenarios'}</Label>
+      <Label accessibilityRole="header" style={s.heading}>{ar ? 'سيناريوهات التطوير' : 'Development scenarios'}</Label>
       <Label>{ar ? 'اختيار سيناريو يعيد ضبط التعليقات. يحدث كل فشل مرة واحدة.' : 'Selecting a scenario resets session comments. Each failure happens once.'}</Label>
       {modes.map(([mode, en, arabic]) => <Button key={mode} onPress={() => { selectScenario(mode); setOpen(false); router.replace('/records'); }}>{ar ? arabic : en}</Button>)}
       <Button onPress={() => { selectScenario('normal'); setOpen(false); router.replace('/records/record-002'); }}>{ar ? 'نقاش فارغ' : 'Empty discussion'}</Button>

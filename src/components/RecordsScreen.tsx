@@ -41,14 +41,14 @@ function Screen({ recordId }: { recordId?: string }) {
   return <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: colors.brand }}>
     <View style={[styles.header, row]}>
       <View accessible accessibilityRole="image" accessibilityLabel={t.appName} style={{ minHeight: 48, justifyContent: 'center' }}><SvgXml accessible={Platform.OS === 'web' ? undefined : false} xml={logo} /></View>
-      <View style={[row, { gap: 8, alignItems: 'center' }]}><Button subtle language onPress={toggleLocale}>{t.language}</Button><DemoControls /></View>
+      <View style={[row, { gap: 8, alignItems: 'center' }]}><Button subtle language accessibilityLabel={t.switchLanguage} onPress={toggleLocale}>{t.language}</Button><DemoControls /></View>
     </View>
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.canvas }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <FlatList ref={list} data={items} keyExtractor={item => item.id} keyboardShouldPersistTaps="handled" keyboardDismissMode={Platform.OS === 'web' ? 'none' : 'on-drag'} contentContainerStyle={styles.content} initialNumToRender={5} windowSize={7}
         ListHeaderComponent={<>
           <View style={{ marginBottom: 20 }}>{recordId ? <Button subtle onPress={() => router.dismissTo('/records')}>{t.backToUpdates}</Button> : <Label accessibilityRole="header" style={s.title}>{t.records}</Label>}</View>
           {currentStatus === 'loading' && <Skeleton detail={!!recordId} />}
-          {currentStatus === 'error' && <View style={s.panel}><Label accessibilityRole="alert">{t.loadError}</Label><Button onPress={() => { if (status === 'error') retry(); else { setDetailStatus('loading'); setAttempt(n => n + 1); } }}>{t.retry}</Button></View>}
+          {currentStatus === 'error' && <View style={s.panel}><Label accessibilityRole="alert" accessibilityLiveRegion="assertive">{t.loadError}</Label><Button onPress={() => { if (status === 'error') retry(); else { setDetailStatus('loading'); setAttempt(n => n + 1); } }}>{t.retry}</Button></View>}
           {currentStatus === 'unavailable' && <View style={s.panel}><Label accessibilityRole="header" style={s.heading}>{t.unavailableTitle}</Label><Label>{t.unavailableDescription}</Label></View>}
           {currentStatus === 'success' && recordId && record && <>
             <View style={s.panel}><Label style={s.muted}>{record.id}</Label><Label accessibilityRole="header" style={s.title}>{record.title[locale]}</Label><Label style={{ color: '#475569', lineHeight: 28 }}>{record.summary[locale]}</Label><Label style={s.muted}>{t.source}: {record.source} · {t.published}: {formatDate(record.publishedAt, locale)}</Label></View>
@@ -58,7 +58,7 @@ function Screen({ recordId }: { recordId?: string }) {
             </View>
           </>}
         </>}
-        ListEmptyComponent={currentStatus === 'success' ? <View style={[s.panel, recordId && { marginBottom: 0, borderRadius: 0, borderTopWidth: 0, borderBottomWidth: 0 }]}><Label style={s.heading}>{recordId ? t.noComments : t.noRecords}</Label>{recordId && <Label style={s.muted}>{t.beFirst}</Label>}</View> : null}
+        ListEmptyComponent={currentStatus === 'success' ? <View style={[s.panel, recordId && { marginBottom: 0, borderRadius: 0, borderTopWidth: 0, borderBottomWidth: 0 }]}><Label accessibilityRole="header" style={s.heading}>{recordId ? t.noComments : t.noRecords}</Label>{recordId && <Label style={s.muted}>{t.beFirst}</Label>}</View> : null}
         ListFooterComponent={recordId && currentStatus === 'success' ? <View style={{ height: 16, backgroundColor: '#fff', borderColor: colors.border, borderWidth: 1, borderTopWidth: 0, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }} /> : null}
         renderItem={({ item }) => 'parentId' in item ? <CommentThread comment={item} comments={comments} submitting={busy} onReply={id => composer.current?.reply(id)} /> : <View style={s.panel}>
           <Label style={s.muted}>{item.source} · {formatDate(item.publishedAt, locale)}</Label>

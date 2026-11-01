@@ -40,5 +40,10 @@
   "unknownAuthor": "Unknown author",
   "submitting": "Posting…",
   "skipToContent": "Skip to content",
-  "invalidReplyError": "This comment cannot be replied to. Choose an available top-level comment."
+  "invalidReplyError": "This comment cannot be replied to. Choose an available top-level comment.",
+  "characterLimit": "Maximum 2,000 characters.",
+  "cancelReply": "Cancel reply",
+  "switchLanguage": "Switch to Arabic",
+  "commentBy": "Comment by",
+  "replyBy": "Reply by"
 }

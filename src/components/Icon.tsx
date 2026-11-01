@@ -11,5 +11,5 @@ const paths = {
 } as const;
 export type IconName = keyof typeof paths;
 export function Icon({ name, color = '#475569', mirrored = false, size = 16 }: { name: IconName; color?: string; mirrored?: boolean; size?: number }) {
-  return <Svg accessible={Platform.OS === 'web' ? undefined : false} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" style={mirrored ? { transform: [{ scaleX: -1 }] } : undefined}><Path d={paths[name]} /></Svg>;
+  return <Svg aria-hidden accessible={Platform.OS === 'web' ? undefined : false} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" style={mirrored ? { transform: [{ scaleX: -1 }] } : undefined}><Path d={paths[name]} /></Svg>;
 }
