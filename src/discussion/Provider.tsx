@@ -42,8 +42,9 @@ function useStore() {
     append: (comment: DiscussionData['comments'][number]) => setData(value => value ? { ...value, comments: [...value.comments, comment] } : value) };
 }
 const Context = createContext<ReturnType<typeof useStore> | null>(null);
-export function DiscussionProvider({ children }: { children: ReactNode }) {
+export function DiscussionProvider({ children, onReady }: { children: ReactNode; onReady?: () => void }) {
   const store = useStore();
+  useEffect(() => { if (store.localeReady) onReady?.(); }, [store.localeReady, onReady]);
   if (!store.localeReady) return null;
   return <Context.Provider value={store}>{children}</Context.Provider>;
 }

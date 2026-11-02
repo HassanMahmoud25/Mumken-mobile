@@ -25,6 +25,28 @@ npm run typecheck
 
 The app uses local sample data. Submitted comments and replies stay in memory for the current application session only.
 
+## iOS journey screenshots
+
+The [English and Arabic iOS walkthrough](docs/journey/README.md) covers the startup overlay, browsing, empty-input validation, failed-reply recovery, successful submission, loading errors, and unavailable updates. It complements the Loom recordings submitted with the assessment.
+
+The gallery contains **13 native images: one shared startup overlay and six English/Arabic pairs**, captured in Expo Go on an iPhone 17 Pro simulator running iOS 26.5. These are not mobile-browser screenshots. Repeated and transient states are described in the walkthrough rather than adding more images.
+
+<details>
+<summary>Preview: startup overlay</summary>
+
+<img src="docs/journey/00-startup.png" alt="Mumken startup overlay on iOS" width="260" />
+
+</details>
+
+<details>
+<summary>Preview: successful submission in English and Arabic</summary>
+
+| English | العربية |
+| --- | --- |
+| <img src="docs/journey/04-success-en.png" alt="Successful submission in English on iOS" width="260" /> | <img src="docs/journey/04-success-ar.png" alt="Successful submission in Arabic on iOS" width="260" /> |
+
+</details>
+
 ## Persistence
 
 - **Language preference:** English/Arabic selection is stored in device `AsyncStorage` under `mumken.locale` and restored before the screens render. Once saved, it survives app closure, a fresh launch, and a device reboot. Clearing app data or uninstalling the app removes the preference. If storage fails, switching still works for the current session, but persistence is not guaranteed.
@@ -50,3 +72,11 @@ The development-only **Demo** button provides loading, empty, and failure scenar
 - **Localization:** Small English/Arabic dictionaries, explicit layout direction and content-aware text styles avoid an additional i18n dependency or a restart when switching languages. The selected language is saved on the device and restored across app restarts. Authored comments keep their language. UTC timestamps display in the device timezone using the Gregorian calendar.
 - **Accessibility:** Contextual control names, input guidance, error/success announcements, visible input focus, scalable text and hidden decorative/collapsed content support native assistive technologies. These improvements do not establish full VoiceOver/TalkBack or WCAG conformance.
 - **Limits:** The seeded user stands in for authentication. A new session resets submitted comments and replies; only the language preference has durable device storage. There is no backend persistence, pagination or multi-user synchronization. Artificial delays and demo failures are development-only. Physical-device, Android assistive-technology and full screen-reader validation remain follow-up work.
+
+## Potential improvements
+
+1. Add native UI tests for posting, replying, failed submission recovery, and language restoration; current automated tests cover the repository and model, not rendered native interactions.
+2. Validate the journey on iOS with the software keyboard, larger text, VoiceOver, and force-close/reboot persistence checks.
+3. If discussions grow, index replies and users by ID and paginate the discussion.
+
+The startup overlay matches the web branding and appears on every fresh app launch, with a pulsing indicator and fade-out after fonts and the saved language are ready. It does not replay during navigation or ordinary background/resume. Reduced-motion settings disable its animations.
