@@ -1,79 +1,69 @@
-# iOS journey: English and Arabic
+# iOS walkthrough
 
-[Back to the project README](../../README.md)
+[Project README](../../README.md)
 
-Captured on November 2, 2026, in **Expo Go on an iPhone 17 Pro simulator, iOS 26.5**. These are native iOS screenshots, not browser emulation. Expo Go's blue development-menu control and the app's development-only Demo button are visible; they are not part of a standalone production build.
+Captured on November 2, 2026, in Expo Go on an iPhone 17 Pro simulator running iOS 26.5. There are 13 native images: one startup frame and six English/Arabic pairs. Some views are scrolled to show the form and feedback.
 
-Thirteen images cover the shared startup overlay and six English/Arabic pairs. The startup image is a frame extracted from a native app launch recording on the same simulator. The native screenshots are kept at their original resolution; previews display at a smaller width. Some screens are scrolled to keep the composer and feedback visible. Interface language changes do not translate user-authored content.
+The blue Expo Go control and **Demo / تجربة** button are development tools. Selecting a demo scenario resets session comments; each failure happens once, then retry succeeds. Authored text keeps its original language.
 
-Use the **Demo / تجربة** button to select the scenarios below. Selecting a scenario resets the discussion session. Each simulated failure happens once, so retry succeeds; no backend is required.
+## 1. Startup
 
-## 1. Launch the app
+The Mumken overlay stays for at least 1.2 seconds and fades when fonts and the saved language are ready. It does not replay during normal navigation or background/resume. This frame was extracted from a native launch recording; the overlay is shared by both languages.
 
-The Mumken logo, gradient background, and pulsing indicator cover font and language restoration. The overlay stays visible for at least 1.2 seconds, then fades into the app when it is ready. It is shared by both interface languages, so one image is sufficient. It appears on a fresh launch and does not replay during ordinary navigation or background/resume.
+<img src="00-startup.png" alt="Mumken startup overlay on iOS" width="300" />
 
-<img src="00-startup.png" alt="Native iOS startup overlay with the Mumken logo and gradient background" width="300" />
+## 2. Updates
 
-## 2. Browse the updates
-
-Start the app and use the language button. Titles, summaries, labels, dates, and layout direction switch between English/LTR and Arabic/RTL. Open an update to reach its discussion.
+Switch language and open an update. The titles, summaries, dates, and layout direction change between English/LTR and Arabic/RTL.
 
 | English | العربية |
 | --- | --- |
-| <img src="01-records-en.png" alt="Browse the updates in English on iOS" width="300" /> | <img src="01-records-ar.png" alt="Browse the updates in Arabic on iOS" width="300" /> |
+| <img src="01-records-en.png" alt="Updates in English on iOS" width="300" /> | <img src="01-records-ar.png" alt="Updates in Arabic on iOS" width="300" /> |
 
-## 3. Open an empty discussion and reject empty input
+## 3. Empty discussion and validation
 
-Choose **Empty discussion / نقاش فارغ** and press Post comment without entering text. The record remains readable, the form shows validation feedback, and the empty-discussion message invites the first contribution.
-
-| English | العربية |
-| --- | --- |
-| <img src="02-empty-validation-en.png" alt="Open an empty discussion and reject empty input in English on iOS" width="300" /> | <img src="02-empty-validation-ar.png" alt="Open an empty discussion and reject empty input in Arabic on iOS" width="300" /> |
-
-## 4. Preserve a failed reply and its target
-
-Choose **Next submission fails / فشل الإرسال التالي**, open the first update, and select Reply on Lina Haddad's comment. Enter text and submit. The failure retains both the draft and the selected author. Switching the interface language preserves the draft; the same English text is shown in both captures.
+Choose **Empty discussion / نقاش فارغ**, then submit without entering text. The form shows validation feedback and the discussion invites the first comment.
 
 | English | العربية |
 | --- | --- |
-| <img src="03-reply-failure-en.png" alt="Preserve a failed reply and its target in English on iOS" width="300" /> | <img src="03-reply-failure-ar.png" alt="Preserve a failed reply and its target in Arabic on iOS" width="300" /> |
+| <img src="02-empty-validation-en.png" alt="Empty discussion and validation in English on iOS" width="300" /> | <img src="02-empty-validation-ar.png" alt="Empty discussion and validation in Arabic on iOS" width="300" /> |
 
-## 5. Retry and confirm success
+## 4. Failed reply
 
-Retry the saved reply. The submission succeeds, the composer clears, a green confirmation appears, and the discussion count increases from five to six. The selected reply target is cleared. The paired screenshots show the same successful session in both languages; the reply remains under its parent further down the thread.
-
-| English | العربية |
-| --- | --- |
-| <img src="04-success-en.png" alt="Retry and confirm success in English on iOS" width="300" /> | <img src="04-success-ar.png" alt="Retry and confirm success in Arabic on iOS" width="300" /> |
-
-## 6. Recover from a loading error
-
-Choose **Initial load failure / فشل التحميل الأولي**. A localized message and Try again action replace the loading state. Retry was exercised and returned to the updates list. The error is shown in both languages rather than repeating the recovered list screenshots.
+Choose **Next submission fails / فشل الإرسال التالي**, open the first update, and reply to Lina Haddad. The first attempt fails. Both the draft and reply target remain, including when the interface language changes.
 
 | English | العربية |
 | --- | --- |
-| <img src="05-load-error-en.png" alt="Recover from a loading error in English on iOS" width="300" /> | <img src="05-load-error-ar.png" alt="Recover from a loading error in Arabic on iOS" width="300" /> |
+| <img src="03-reply-failure-en.png" alt="Failed reply in English on iOS" width="300" /> | <img src="03-reply-failure-ar.png" alt="Failed reply in Arabic on iOS" width="300" /> |
 
-## 7. Handle an unavailable update
+## 5. Successful retry
 
-Choose **Unavailable record / تحديث غير متاح**. A localized explanation appears without a composer, and All updates returns to the list.
+Retry the saved reply. The composer clears, a green confirmation appears, and the count increases from five to six. The reply remains under its parent further down the thread.
 
 | English | العربية |
 | --- | --- |
-| <img src="06-unavailable-en.png" alt="Handle an unavailable update in English on iOS" width="300" /> | <img src="06-unavailable-ar.png" alt="Handle an unavailable update in Arabic on iOS" width="300" /> |
+| <img src="04-success-en.png" alt="Successful retry in English on iOS" width="300" /> | <img src="04-success-ar.png" alt="Successful retry in Arabic on iOS" width="300" /> |
 
-## Review and automated checks
+## 6. Loading error
 
-The native walkthrough exercised language switching, opening records, rejecting empty submissions, reply selection, failed-reply draft preservation, retry, success feedback, initial-load recovery, and missing-record navigation. The screenshots document stable outcomes rather than every animation frame.
+Choose **Initial load failure / فشل التحميل الأولي**. The error is translated and includes Try again. Retry was checked and restored the list.
 
-Startup behavior and device-storage rules are documented in the main README. This pass does not claim a device reboot test, physical-device validation, or complete VoiceOver/software-keyboard coverage. Those remain separate checks; the native screenshots are evidence of the simulator journey only.
-
-On November 2, 2026, the following checks passed:
-
-| Check | Result |
+| English | العربية |
 | --- | --- |
-| `npm test` | 8 tests passed; repository and model behaviors. |
-| `npm run lint` | Passed. |
-| `npm run typecheck` | Passed. |
+| <img src="05-load-error-en.png" alt="Loading error in English on iOS" width="300" /> | <img src="05-load-error-ar.png" alt="Loading error in Arabic on iOS" width="300" /> |
 
-Automated tests cover seed data and thread ordering, session isolation, text and reply-target validation, one-time failures and recovery, production demo isolation, and localized date formatting. They do not render or drive the native UI; the simulator walkthrough above was performed separately.
+## 7. Unavailable update
+
+Choose **Unavailable record / تحديث غير متاح**. The screen explains that the update cannot be found and provides a way back to the list.
+
+| English | العربية |
+| --- | --- |
+| <img src="06-unavailable-en.png" alt="Unavailable update in English on iOS" width="300" /> | <img src="06-unavailable-ar.png" alt="Unavailable update in Arabic on iOS" width="300" /> |
+
+## Review results
+
+The simulator walkthrough checked language switching, opening records, empty-input validation, posting a new comment, reply selection, failed-draft recovery, success feedback, loading-error retry, and missing-record navigation.
+
+All eight repository/model tests, lint, and TypeScript checks passed on November 2, 2026. Tests cover seed data, ordering, session isolation, validation, one-time failures, production demo isolation, and dates. See the [check commands](../../README.md#checks). The native UI was checked separately on the simulator.
+
+Physical-device, reboot, full VoiceOver, and software-keyboard checks remain follow-up work. Storage behavior is documented in the main README.

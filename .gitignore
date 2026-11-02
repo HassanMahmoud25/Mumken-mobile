@@ -40,5 +40,5 @@ yarn-error.*
 /ios
 /android
 
-# AI agent instructions
+# Local tooling
 AGENTS.md

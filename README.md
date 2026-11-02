@@ -1,12 +1,8 @@
 # Mumken Mobile
 
-A mobile discussion app for browsing updates, posting comments, and replying to other users. Supports English and Arabic with LTR and RTL layouts.
+An iOS-focused discussion app for reading updates, posting comments, and replying in English or Arabic. Built with Expo SDK 57, React Native, React 19, TypeScript, Expo Router, and Reanimated.
 
-## Stack
-
-Expo SDK 57, React Native, React 19, TypeScript, Expo Router, and Reanimated.
-
-## Run locally
+## Run
 
 ```sh
 npm ci
@@ -23,60 +19,54 @@ npm run lint
 npm run typecheck
 ```
 
-The app uses local sample data. Submitted comments and replies stay in memory for the current application session only.
+## Features
 
-## iOS journey screenshots
+- Update list and discussion screens, with one level of replies.
+- English/LTR and Arabic/RTL layouts, switched without restarting the app.
+- Empty-input validation, a 2,000-character limit, and duplicate-submission protection.
+- Failed submissions retain the draft and reply target; successful posts show a green confirmation.
+- Loading skeletons, empty discussions, unavailable updates, and retryable errors.
+- Collapsible replies and a shared composer that focuses when Reply is selected.
+- Safe-area spacing, keyboard avoidance, status announcements, scalable text, and reduced-motion support.
+- A startup overlay with the Mumken logo and gradient. It stays for at least 1.2 seconds, then fades when fonts and the saved language are ready. It does not replay during navigation or normal background/resume.
 
-The [English and Arabic iOS walkthrough](docs/journey/README.md) covers the startup overlay, browsing, empty-input validation, failed-reply recovery, successful submission, loading errors, and unavailable updates. It complements the Loom recordings submitted with the assessment.
+## Data and storage
 
-The gallery contains **13 native images: one shared startup overlay and six English/Arabic pairs**, captured in Expo Go on an iPhone 17 Pro simulator running iOS 26.5. These are not mobile-browser screenshots. Repeated and transient states are described in the walkthrough rather than adding more images.
+| Data | Lifetime |
+| --- | --- |
+| Comments and replies | In memory while the app session is alive. A reload or fresh launch restores the JSON seed. |
+| Language | Saved in `AsyncStorage` and restored on launch. Clearing app data or uninstalling removes it. |
+| Draft and reply target | Temporary composer state; retained after a failed submission. |
+
+Backgrounding alone does not end a session, but the OS may terminate the app. If device storage fails, language selection still works for that session. Device-reboot restoration follows the storage design but was not manually tested.
+
+There is no backend or authentication. The supplied current user is used for submissions. Authored comments keep their original language. UTC timestamps display in the device timezone using the Gregorian calendar.
+
+## Demo scenarios
+
+In development, **Demo / تجربة** provides slow loading, initial-load and discussion-load failures, a failed submission, an empty list, an empty discussion, and an unavailable update. Choosing a scenario resets session comments. Each failure happens once, then retry succeeds.
+
+The normal development delay is 900 ms. `EXPO_PUBLIC_DEMO_DELAY_MS` changes it (0–4,000 ms); the slow-loading scenario always uses four seconds. Demo controls, simulated delays, and failures are disabled in production.
+
+## iOS screenshots
+
+The [English and Arabic walkthrough](docs/journey/README.md) has 13 native images: the startup overlay and six paired stages. They were captured in Expo Go on an iPhone 17 Pro simulator running iOS 26.5, and complement the submitted Loom recordings.
 
 <details>
-<summary>Preview: startup overlay</summary>
+<summary>Startup overlay</summary>
 
 <img src="docs/journey/00-startup.png" alt="Mumken startup overlay on iOS" width="260" />
 
 </details>
 
-<details>
-<summary>Preview: successful submission in English and Arabic</summary>
+## Implementation notes
 
-| English | العربية |
-| --- | --- |
-| <img src="docs/journey/04-success-en.png" alt="Successful submission in English on iOS" width="260" /> | <img src="docs/journey/04-success-ar.png" alt="Successful submission in Arabic on iOS" width="260" /> |
+The PDF defines the scope, the JSON supplies the seed, and Figma provides the visual reference. The update list was inferred from the journey because the supplied design covered the discussion screen. The shared composer and collapsible threads are implementation choices.
 
-</details>
+Expo Router handles navigation. React Context shares session data and language; a repository handles validation and simulated requests. Drafts stay in the composer. Small dictionaries provide interface translations without an i18n library.
 
-## Persistence
+## Limits and next steps
 
-- **Language preference:** English/Arabic selection is stored in device `AsyncStorage` under `mumken.locale` and restored before the screens render. Once saved, it survives app closure, a fresh launch, and a device reboot. Clearing app data or uninstalling the app removes the preference. If storage fails, switching still works for the current session, but persistence is not guaranteed.
-- **Comments and replies:** New submissions are stored only in the session repository and shared React state. They survive navigation and background/resume while the app process remains alive. Reloading, force-closing and relaunching, a device reboot, or the OS terminating the process starts a new session with the supplied JSON seed. They are never written to `AsyncStorage` or a backend. Selecting a development Demo scenario also resets the discussion session without resetting the language.
-- **Drafts and interface state:** Draft text, reply selection, and expanded/collapsed threads are temporary UI state. Failed submissions retain the draft and reply target for retry; drafts are not restored after a fresh app launch.
+Comments are plain text and session-only. There is no backend sync, pagination, or multi-user conflict handling. Automated tests cover the repository and model; the screenshot walkthrough was checked separately on the iOS simulator.
 
-The assessment requires submitted comments to persist only for the current application session. Persisting the language is an optional usability enhancement.
-
-To verify on a device or simulator: select Arabic, post a comment and a reply, and navigate away and back; both submissions should remain. Force-close and reopen the app, then repeat after a device reboot: Arabic should remain selected, while the new comment and reply should be absent and the original sample discussion restored. Backgrounding alone does not necessarily end the session.
-
-The development-only **Demo** button provides loading, empty, and failure scenarios. Selecting a scenario resets the session; simulated failures happen once, then retry succeeds.
-
-## Technical Decisions & Assumptions
-
-- **Scope and inputs:** The PDF defined the required commenting journey, JSON supplied the local seed, and Figma supplied the visual direction. Comments and one level of replies require no backend.
-- **Missing records screen:** Figma supplied the discussion/details screen but omitted the `/records` listing. The listing was inferred from the PDF journey and multiple records in the JSON, retaining the supplied colors, typography and visual language across web and mobile.
-- **Visual refinements:** Spacing, header/content alignment, clipped text and icons were refined across both implementations. Mobile adapts that direction to smaller screens, scalable text and touch targets.
-- **Motion:** Figma provided no interaction prototype or transition specification. Mobile adds smooth reply disclosure, animated scrolling to the composer and content-shaped loading skeletons, with reduced-motion support.
-- **Reply interaction:** Collapsible threads reduce scrolling and start expanded. Reply scrolls to and focuses the existing composer; a “Replying to” bar identifies the author, and Cancel retains the draft. This avoids adding a modal or a second editor for unspecified reply behavior.
-- **Validation and recovery:** Whitespace-only input is rejected after trimming; text is limited to 2,000 characters. Duplicate submissions are blocked, comments appear only after success, and failures preserve the draft and reply target for retry. Loading, empty, unavailable and error states cover the remaining journey.
-- **Mobile behavior:** Safe-area spacing and keyboard avoidance keep the composer usable. Reply focuses the shared input; successful posting dismisses the keyboard. Expo Router manages the native navigation stack, and the logo is decorative rather than another navigation action.
-- **State and data:** Expo Router handles navigation. React Context shares session data and locale; drafts and submission state remain local to the composer. A repository clones the JSON seed and validates writes; comments and replies share a flat collection linked by record and parent IDs. No extra state/data library is needed for this scope.
-- **Localization:** Small English/Arabic dictionaries, explicit layout direction and content-aware text styles avoid an additional i18n dependency or a restart when switching languages. The selected language is saved on the device and restored across app restarts. Authored comments keep their language. UTC timestamps display in the device timezone using the Gregorian calendar.
-- **Accessibility:** Contextual control names, input guidance, error/success announcements, visible input focus, scalable text and hidden decorative/collapsed content support native assistive technologies. These improvements do not establish full VoiceOver/TalkBack or WCAG conformance.
-- **Limits:** The seeded user stands in for authentication. A new session resets submitted comments and replies; only the language preference has durable device storage. There is no backend persistence, pagination or multi-user synchronization. Artificial delays and demo failures are development-only. Physical-device, Android assistive-technology and full screen-reader validation remain follow-up work.
-
-## Potential improvements
-
-1. Add native UI tests for posting, replying, failed submission recovery, and language restoration; current automated tests cover the repository and model, not rendered native interactions.
-2. Validate the journey on iOS with the software keyboard, larger text, VoiceOver, and force-close/reboot persistence checks.
-3. If discussions grow, index replies and users by ID and paginate the discussion.
-
-The startup overlay matches the web branding and appears on every fresh app launch, with a pulsing indicator and fade-out after fonts and the saved language are ready. It does not replay during navigation or ordinary background/resume. Reduced-motion settings disable its animations.
+Next steps would be native UI tests, physical-device and VoiceOver/TalkBack checks, software-keyboard and reboot testing, and pagination if discussions grow.
